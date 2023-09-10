@@ -1,0 +1,16 @@
+spring:
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5441/dbServer
+    username: postgres
+    password: 1234teste
+    driverClassName: org.postgresql.Driver
+server:
+  port: 8090
+  servlet:
+    context-path: /votingService/v1

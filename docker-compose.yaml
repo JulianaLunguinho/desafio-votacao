@@ -1,0 +1,10 @@
+version: "3"
+services:
+  database:
+    image: postgres:10.17
+    environment:
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=1234teste"
+      - "POSTGRES_DB=dbServer"
+    ports:
+      - 5441:5432
