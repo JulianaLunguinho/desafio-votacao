@@ -16,8 +16,8 @@ public class Votes {
     @GeneratedValue
     private Long id;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "associate_id")
+    private Long associateId;
 
     @Column(name = "question_id")
     private Long questionId;

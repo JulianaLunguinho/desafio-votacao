@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-
 @Data
 @Table
 @Entity
@@ -21,7 +20,8 @@ public class Question {
     @GeneratedValue
     private Long id;
 
-    private String question;
+    @Column(name = "question")
+    private String content;
 
     @Column(name = "initial_datetime")
     private LocalDateTime initialDatetime;

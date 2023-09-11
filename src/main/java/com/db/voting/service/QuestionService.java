@@ -22,7 +22,7 @@ public class QuestionService {
 
     public CreateQuestionResponse createQuestion(CreateQuestionRequest createQuestionRequest) {
         var question = Question.builder()
-                .question(createQuestionRequest.getQuestion())
+                .content(createQuestionRequest.getQuestion())
                 .build();
 
         log.info("[CreateQuestionService] - Saving question: {}", question);
@@ -38,7 +38,7 @@ public class QuestionService {
         log.info("[CreateQuestionService] - Getting question for id: {}", questionId);
         var optionalQuestion = questionRepository.findById(questionId);
 
-        if(!optionalQuestion.isPresent())
+        if(optionalQuestion.isEmpty())
             throw new EntityNotFoundException("Question not found");
 
         var question = optionalQuestion.get();
@@ -64,7 +64,7 @@ public class QuestionService {
 
         return OpenSessionResponse.builder()
                 .questionId(questionId)
-                .question(question.getQuestion())
+                .question(question.getContent())
                 .sessionStart(question.getInitialDatetime().toString())
                 .sessionEnd(question.getEndDatetime().toString())
                 .build();
