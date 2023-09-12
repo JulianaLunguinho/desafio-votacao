@@ -10,6 +10,7 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
+@Builder
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,11 +20,13 @@ public class Votes {
     @GeneratedValue
     private Long id;
 
-    @Column(name = "associate_id")
-    private Long associateId;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "associate_id", referencedColumnName = "id")
+    private Associate associate;
 
-    @Column(name = "question_id")
-    private Long questionId;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "question_id", referencedColumnName = "id")
+    private Question question;
 
     @Override
     public boolean equals(Object o) {

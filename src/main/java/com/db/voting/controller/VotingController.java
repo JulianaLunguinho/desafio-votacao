@@ -2,7 +2,9 @@ package com.db.voting.controller;
 
 import com.db.voting.domain.dto.CreateQuestionRequest;
 import com.db.voting.domain.dto.CreateQuestionResponse;
+import com.db.voting.domain.dto.QuestionResultResponse;
 import com.db.voting.domain.dto.OpenSessionResponse;
+import com.db.voting.domain.enums.Vote;
 import com.db.voting.service.QuestionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +33,18 @@ public class VotingController {
         return ResponseEntity.ok().body(response);
     }
 
-    // Endpoint de votação
+    @PostMapping("/vote")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void registerVote(@RequestParam Long questionId, @RequestParam Long associateId, @RequestParam Vote vote) {
+        log.info("[VotingController] - Request to register vote - questionId: {}, associateId: {}, vote: {}", questionId, associateId, vote);
+        questionService.registerVote(questionId, associateId, vote);
+    }
 
-    // Get result
+    @GetMapping("/question/{id}")
+    public ResponseEntity<QuestionResultResponse> getResultQuestion(@PathVariable Long id) {
+        log.info("[VotingController] - Request results of question {}", id);
+        var response = questionService.getResultQuestion(id);
+        return ResponseEntity.ok().body(response);
+    }
 
 }

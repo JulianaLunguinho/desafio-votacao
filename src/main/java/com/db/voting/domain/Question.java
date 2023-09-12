@@ -3,6 +3,7 @@ package com.db.voting.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.DynamicInsert;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -13,6 +14,7 @@ import java.util.Objects;
 @Setter
 @Builder
 @ToString
+@DynamicInsert
 @NoArgsConstructor
 @AllArgsConstructor
 public class Question {
@@ -30,10 +32,10 @@ public class Question {
     @Column(name = "end_datetime")
     private LocalDateTime endDatetime;
 
-    @Column(name = "positive_votes")
+    @Column(name = "positive_votes", columnDefinition = "integer default 0")
     private Integer positiveVotes;
 
-    @Column(name = "negative_votes")
+    @Column(name = "negative_votes", columnDefinition = "integer default 0")
     private Integer negativeVotes;
 
     @Override
