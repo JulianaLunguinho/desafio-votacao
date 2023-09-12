@@ -40,7 +40,7 @@ public class VotingController {
         questionService.registerVote(questionId, associateId, vote);
     }
 
-    @GetMapping("/question/{id}")
+    @GetMapping("/question/{id}/results")
     public ResponseEntity<QuestionResultResponse> getResultQuestion(@PathVariable Long id) {
         log.info("[VotingController] - Request results of question {}", id);
         var response = questionService.getResultQuestion(id);
