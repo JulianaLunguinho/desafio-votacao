@@ -1,0 +1,13 @@
+spring:
+  jpa:
+    database: h2
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+      dialect: org.hibernate.dialect.H2Dialect
+  datasource:
+    platform: h2
+    url: jdbc:h2:mem:dbServer
+    DB_CLOSE_DELAY: -1
+    NON_KEYWORDS: KEY,VALUE
+    driverClassName: org.h2.Driver

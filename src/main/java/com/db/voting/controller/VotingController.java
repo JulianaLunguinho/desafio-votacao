@@ -10,9 +10,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Slf4j
+@Validated
 @RestController
 public class VotingController {
 
@@ -21,7 +25,7 @@ public class VotingController {
 
     @PostMapping("/question")
     @ResponseStatus(HttpStatus.CREATED)
-    public CreateQuestionResponse createQuestion(@RequestBody CreateQuestionRequest request) {
+    public CreateQuestionResponse createQuestion(@Valid @RequestBody CreateQuestionRequest request) {
         log.info("[VotingController] - {}", request);
         return questionService.createQuestion(request);
     }
