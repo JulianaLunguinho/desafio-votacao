@@ -1,0 +1,264 @@
+openapi: 3.0.3
+info:
+  title: Voting Service v1
+  description: API de gerenciamento de sessões de votação
+  version: 1.0.0
+servers:
+  - url: https://{{host:port}}/votingService/v1
+tags:
+  - name: Question
+    description: Gerenciamento de pautas para votação
+  - name: Associate
+    description: Cadastro de associados
+paths:
+  /question:
+    post:
+      tags:
+        - Question
+      summary: Cria uma pauta para votação
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - question
+              properties:
+                question:
+                  type: string
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  questionId:
+                    type: number
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+  /session:
+    patch:
+      tags:
+        - Question
+      summary: Abre uma sessão de votação
+      parameters:
+        - name: questionId
+          in: query
+          description: Id da questão para a qual será aberta a sessão
+          required: true
+          schema:
+            type: number
+        - name: duration
+          in: query
+          description: Duração da sessão de votação em minutos
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OpenSessionResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+  /vote:
+    post:
+      tags:
+        - Question
+      summary: Registra um voto
+      parameters:
+        - name: questionId
+          in: query
+          description: Id da pauta que será votada
+          required: true
+          schema:
+            type: number
+        - name: associateId
+          in: query
+          description: Id do associado que está votando
+          required: true
+          schema:
+            type: number
+        - name: vote
+          in: query
+          description: Voto
+          required: true
+          schema:
+            type: string
+            enum:
+              - YES
+              - NO
+      responses:
+        "204":
+          description: No content
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+  /question/{id}/results:
+    get:
+      tags:
+        - Question
+      summary: Busca os resultados de uma pauta
+      parameters:
+        - name: id
+          in: path
+          description: Id da questão
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuestionResultResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+  /associate:
+    post:
+      tags:
+        - Associate
+      summary: Cria um perfil de associado
+      parameters:
+        - name: name
+          in: query
+          description: Nome do associado
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  associatedId:
+                    type: number
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorMessage"
+components:
+  schemas:
+    OpenSessionResponse:
+      type: object
+      properties:
+        questionId:
+          type: number
+        question:
+          type: string
+        sessionStart:
+          type: string
+        sessionEnd:
+          type: string
+    QuestionResultResponse:
+      type: object
+      properties:
+        questionId:
+          type: number
+        question:
+          type: string
+        sessionIsOpen:
+          type: boolean
+        positiveVotes:
+          type: integer
+        positiveVotesPercent:
+          type: string
+        negativeVotes:
+          type: integer
+        negativeVotesPercent:
+          type: string
+    ErrorMessage:
+      type: object
+      properties:
+        code:
+          type: string
+        error:
+          type: string
+        message:
+          type: string
