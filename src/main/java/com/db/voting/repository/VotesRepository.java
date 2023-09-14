@@ -1,4 +1,4 @@
-package com.db.voting.repositories;
+package com.db.voting.repository;
 
 import com.db.voting.domain.Associate;
 import com.db.voting.domain.Question;

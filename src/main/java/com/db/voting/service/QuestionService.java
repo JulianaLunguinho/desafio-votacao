@@ -4,14 +4,15 @@ import com.db.voting.domain.Question;
 import com.db.voting.domain.Votes;
 import com.db.voting.domain.dto.CreateQuestionRequest;
 import com.db.voting.domain.dto.CreateQuestionResponse;
-import com.db.voting.domain.dto.QuestionResultResponse;
 import com.db.voting.domain.dto.OpenSessionResponse;
+import com.db.voting.domain.dto.QuestionResultResponse;
 import com.db.voting.domain.enums.SessionStatus;
 import com.db.voting.domain.enums.Vote;
-import com.db.voting.repositories.AssociateRepository;
-import com.db.voting.repositories.QuestionRepository;
-import com.db.voting.repositories.VotesRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.db.voting.exception.EntityNotFoundException;
+import com.db.voting.exception.InvalidDataException;
+import com.db.voting.repository.AssociateRepository;
+import com.db.voting.repository.QuestionRepository;
+import com.db.voting.repository.VotesRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,8 +53,8 @@ public class QuestionService {
 
         if(!status.equals(SessionStatus.NOT_STARTED)) {
             if(status.equals(SessionStatus.OPEN))
-                throw new IllegalArgumentException("The voting session for this question has already started");
-            throw new IllegalArgumentException("The voting session for this question has now ended");
+                throw new InvalidDataException("The voting session for this question has already started");
+            throw new InvalidDataException("The voting session for this question has now ended");
         }
 
         var initial = LocalDateTime.now();
@@ -83,8 +84,8 @@ public class QuestionService {
 
         if(!status.equals(SessionStatus.OPEN)) {
             if(status.equals(SessionStatus.NOT_STARTED))
-                throw new IllegalArgumentException("The voting session for this question has not yet started");
-            throw new IllegalArgumentException("The voting session for this question has now ended");
+                throw new InvalidDataException("The voting session for this question has not yet started");
+            throw new InvalidDataException("The voting session for this question has now ended");
         }
 
         //verificar se usuário já votou nessa questão
@@ -93,7 +94,7 @@ public class QuestionService {
                 .orElseThrow(() -> new EntityNotFoundException("Associate not found"));
         var votesAssociate = votesRepository.countByAssociateAndQuestion(associate, question);
         if(votesAssociate != 0)
-            throw new IllegalArgumentException("The associate has already voted on this question");
+            throw new InvalidDataException("The associate has already voted on this question");
 
         //registrar voto na tabela de votos
         var votes = Votes.builder()
@@ -107,7 +108,6 @@ public class QuestionService {
         switch (vote) {
             case YES -> question.setPositiveVotes(question.getPositiveVotes() + 1);
             case NO -> question.setNegativeVotes(question.getNegativeVotes() + 1);
-            default -> log.info("[QuestionService] - No votes recorded for vote id {}", votes.getId());
         }
         log.info("[QuestionService] - Saving question {}", question);
         questionRepository.save(question);
@@ -119,7 +119,7 @@ public class QuestionService {
         var status = getSessionStatus(question);
 
         if(status.equals(SessionStatus.NOT_STARTED))
-            throw new IllegalArgumentException("The voting session for this question has not yet started");
+            throw new InvalidDataException("The voting session for this question has not yet started");
 
         var positiveVotes = question.getPositiveVotes();
         var negativeVotes = question.getNegativeVotes();

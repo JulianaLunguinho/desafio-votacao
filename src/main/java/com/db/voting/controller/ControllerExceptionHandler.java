@@ -1,7 +1,8 @@
 package com.db.voting.controller;
 
 import com.db.voting.domain.ErrorMessage;
-import jakarta.persistence.EntityNotFoundException;
+import com.db.voting.exception.EntityNotFoundException;
+import com.db.voting.exception.InvalidDataException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -10,20 +11,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
-    @ExceptionHandler(value = {Exception.class, RuntimeException.class})
-    public ResponseEntity<ErrorMessage> genericException(Exception exception) {
+    @ExceptionHandler(value = InvalidDataException.class)
+    public ResponseEntity<ErrorMessage> invalidDataException(InvalidDataException exception) {
         var message = ErrorMessage.builder()
-                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .error(exception.getClass().getSimpleName())
-                .message(exception.getMessage())
-                .build();
-        return ResponseEntity.internalServerError().body(message);
-    }
-
-    @ExceptionHandler(value = IllegalArgumentException.class)
-    public ResponseEntity<ErrorMessage> illegalArgumentException(IllegalArgumentException exception) {
-        var message = ErrorMessage.builder()
-                .code(HttpStatus.BAD_REQUEST.value())
+                .code(exception.getCode())
                 .error(exception.getClass().getSimpleName())
                 .message(exception.getMessage())
                 .build();
@@ -33,10 +24,22 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(value = EntityNotFoundException.class)
     public ResponseEntity<ErrorMessage> entityNotFoundException(EntityNotFoundException exception) {
         var message = ErrorMessage.builder()
-                .code(HttpStatus.NOT_FOUND.value())
+                .code(exception.getCode())
                 .error(exception.getClass().getSimpleName())
                 .message(exception.getMessage())
                 .build();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND.value()).body(message);
+        return ResponseEntity.status(exception.getCode()).body(message);
     }
+
+    @ExceptionHandler(value = Exception.class)
+    public ResponseEntity<ErrorMessage> genericException(Exception exception) {
+        var message = ErrorMessage.builder()
+                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .error(exception.getClass().getSimpleName())
+                .message(exception.getMessage())
+                .build();
+        return ResponseEntity.internalServerError().body(message);
+    }
+
 }
+

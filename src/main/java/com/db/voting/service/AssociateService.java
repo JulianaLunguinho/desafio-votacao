@@ -2,7 +2,7 @@ package com.db.voting.service;
 
 import com.db.voting.domain.Associate;
 import com.db.voting.domain.dto.RegisterAssociateResponse;
-import com.db.voting.repositories.AssociateRepository;
+import com.db.voting.repository.AssociateRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
