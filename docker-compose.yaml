@@ -8,3 +8,11 @@ services:
       - "POSTGRES_DB=dbServer"
     ports:
       - 5441:5432
+  springboot-app:
+    depends_on:
+      - database
+    image: springbooot-app
+    restart: always
+    build: .
+    ports:
+      - 18090:8090
