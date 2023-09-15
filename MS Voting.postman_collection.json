@@ -1,0 +1,156 @@
+{
+	"info": {
+		"_postman_id": "788e0196-1c76-481f-af40-b795fb0925f9",
+		"name": "MS Voting",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29620280"
+	},
+	"item": [
+		{
+			"name": "Create Question",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"question\": \"Vamos contratar a Juliana, essa backend super gente boa?\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:18090/votingService/v1/question",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "18090",
+					"path": [
+						"votingService",
+						"v1",
+						"question"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Open session",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:18090/votingService/v1/session?questionId=1&duration=60",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "18090",
+					"path": [
+						"votingService",
+						"v1",
+						"session"
+					],
+					"query": [
+						{
+							"key": "questionId",
+							"value": "1"
+						},
+						{
+							"key": "duration",
+							"value": "60"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register Associate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:18090/votingService/v1/associate?name=Ada Lovelace",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "18090",
+					"path": [
+						"votingService",
+						"v1",
+						"associate"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Ada Lovelace"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register Vote",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:18090/votingService/v1/vote?questionId=1&associateId=1&vote=YES",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "18090",
+					"path": [
+						"votingService",
+						"v1",
+						"vote"
+					],
+					"query": [
+						{
+							"key": "questionId",
+							"value": "1"
+						},
+						{
+							"key": "associateId",
+							"value": "1"
+						},
+						{
+							"key": "vote",
+							"value": "YES"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Results",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:18090/votingService/v1/question/1/results",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "18090",
+					"path": [
+						"votingService",
+						"v1",
+						"question",
+						"1",
+						"results"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

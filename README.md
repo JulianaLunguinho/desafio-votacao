@@ -1,3 +1,9 @@
+# Instruções para executar o projeto
+
+PRÉ-REQUISITO: É necessário ter o docker instalado no seu computador para executar o projeto.
+- Para realizar o deploy local, rode o script appRun;
+- Para parar o container, rode o script appStop;
+
 # Votação
 
 ## Objetivo
